@@ -1,0 +1,11 @@
+pandas
+geopandas
+requests
+matplotlib
+scikit-learn
+scipy
+shapely
+folium
+networkx
+osmnx
+python-dotenv

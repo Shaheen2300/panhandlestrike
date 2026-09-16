@@ -1,3 +1,14 @@
+# Project-specific: virtual env, re-fetchable raw data, cache, and the two
+# heaviest processed subfolders (OSM road network, Census shapefiles) -
+# straightforwardly re-derivable from public sources. Everything else under
+# data/processed/ stays tracked (small, or expensive-to-regenerate GLM
+# lightning data).
+gis-env/
+data/raw/
+cache/
+data/processed/osm/
+data/processed/census/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

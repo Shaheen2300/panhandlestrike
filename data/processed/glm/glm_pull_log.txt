@@ -1,0 +1,100 @@
+[2026-09-08 18:52:09] === GLM panhandle pull starting: May-Sep 2024, May-Sep 2025 ===
+[2026-09-08 18:52:09] Listing files for 2024-05 (bucket=noaa-goes16)...
+[2026-09-08 18:52:35]   133366 files to process for 2024-05
+[2026-09-08 19:03:48]   progress 2024-05: 20000/133366 files (29.8 files/sec) | 10756 flashes so far | 0 errors
+[2026-09-08 19:14:20]   progress 2024-05: 40000/133366 files (30.7 files/sec) | 11510 flashes so far | 0 errors
+[2026-09-08 19:24:57]   progress 2024-05: 60000/133366 files (30.9 files/sec) | 102335 flashes so far | 0 errors
+[2026-09-08 19:36:51]   progress 2024-05: 80000/133366 files (30.1 files/sec) | 193908 flashes so far | 0 errors
+[2026-09-08 19:49:15]   progress 2024-05: 100000/133366 files (29.4 files/sec) | 193908 flashes so far | 0 errors
+[2026-09-08 20:01:15]   progress 2024-05: 120000/133366 files (29.1 files/sec) | 212215 flashes so far | 0 errors
+[2026-09-08 20:09:13] DONE 2024-05: 133366 files | 214178 flashes | 0 errors | 1.28h | saved to data/processed/glm\glm_panhandle_2024_05.parquet
+[2026-09-08 20:09:13] Listing files for 2024-06 (bucket=noaa-goes16)...
+[2026-09-08 20:09:41]   129594 files to process for 2024-06
+[2026-09-08 20:22:22]   progress 2024-06: 20000/129594 files (26.3 files/sec) | 63733 flashes so far | 0 errors
+[2026-09-08 20:34:17]   progress 2024-06: 40000/129594 files (27.1 files/sec) | 67264 flashes so far | 0 errors
+[2026-09-08 20:46:09]   progress 2024-06: 60000/129594 files (27.4 files/sec) | 87111 flashes so far | 0 errors
+[2026-09-08 20:57:54]   progress 2024-06: 80000/129594 files (27.7 files/sec) | 103446 flashes so far | 0 errors
+[2026-09-08 21:09:59]   progress 2024-06: 100000/129594 files (27.6 files/sec) | 104219 flashes so far | 0 errors
+[2026-09-08 21:22:15]   progress 2024-06: 120000/129594 files (27.6 files/sec) | 144634 flashes so far | 0 errors
+[2026-09-08 21:27:54] DONE 2024-06: 129594 files | 158545 flashes | 0 errors | 1.30h | saved to data/processed/glm\glm_panhandle_2024_06.parquet
+[2026-09-08 21:27:54] Listing files for 2024-07 (bucket=noaa-goes16)...
+[2026-09-08 21:28:24]   133672 files to process for 2024-07
+[2026-09-08 21:40:39]   progress 2024-07: 20000/133672 files (27.2 files/sec) | 13466 flashes so far | 0 errors
+[2026-09-08 21:52:36]   progress 2024-07: 40000/133672 files (27.6 files/sec) | 39827 flashes so far | 0 errors
+[2026-09-08 22:04:29]   progress 2024-07: 60000/133672 files (27.7 files/sec) | 51935 flashes so far | 0 errors
+[2026-09-08 22:17:06]   progress 2024-07: 80000/133672 files (27.4 files/sec) | 123417 flashes so far | 0 errors
+[2026-09-08 22:29:06]   progress 2024-07: 100000/133672 files (27.5 files/sec) | 152617 flashes so far | 0 errors
+[2026-09-08 22:40:43]   progress 2024-07: 120000/133672 files (27.7 files/sec) | 172364 flashes so far | 0 errors
+[2026-09-08 22:49:03] DONE 2024-07: 133672 files | 228396 flashes | 0 errors | 1.34h | saved to data/processed/glm\glm_panhandle_2024_07.parquet
+[2026-09-08 22:49:03] Listing files for 2024-08 (bucket=noaa-goes16)...
+[2026-09-08 22:49:33]   133877 files to process for 2024-08
+[2026-09-08 23:02:37]   progress 2024-08: 20000/133877 files (25.5 files/sec) | 76924 flashes so far | 0 errors
+[2026-09-08 23:14:54]   progress 2024-08: 40000/133877 files (26.3 files/sec) | 84922 flashes so far | 0 errors
+[2026-09-08 23:27:06]   progress 2024-08: 60000/133877 files (26.6 files/sec) | 100647 flashes so far | 0 errors
+[2026-09-08 23:39:24]   progress 2024-08: 80000/133877 files (26.7 files/sec) | 171638 flashes so far | 0 errors
+[2026-09-08 23:51:57]   progress 2024-08: 100000/133877 files (26.7 files/sec) | 186754 flashes so far | 0 errors
+[2026-09-09 00:04:13]   progress 2024-08: 120000/133877 files (26.8 files/sec) | 194999 flashes so far | 0 errors
+[2026-09-09 00:12:53] DONE 2024-08: 133877 files | 211520 flashes | 0 errors | 1.39h | saved to data/processed/glm\glm_panhandle_2024_08.parquet
+[2026-09-09 00:12:53] Listing files for 2024-09 (bucket=noaa-goes16)...
+[2026-09-09 00:13:22]   126560 files to process for 2024-09
+[2026-09-09 00:26:05]   progress 2024-09: 20000/126560 files (26.2 files/sec) | 2960 flashes so far | 0 errors
+[2026-09-09 00:37:55]   progress 2024-09: 40000/126560 files (27.2 files/sec) | 3129 flashes so far | 0 errors
+[2026-09-09 00:50:02]   progress 2024-09: 60000/126560 files (27.3 files/sec) | 12196 flashes so far | 0 errors
+[2026-09-09 01:02:42]   progress 2024-09: 80000/126560 files (27.0 files/sec) | 37697 flashes so far | 0 errors
+[2026-09-09 01:15:26]   progress 2024-09: 100000/126560 files (26.9 files/sec) | 37697 flashes so far | 0 errors
+[2026-09-09 01:27:46]   progress 2024-09: 120000/126560 files (26.9 files/sec) | 43722 flashes so far | 0 errors
+[2026-09-09 01:31:49] DONE 2024-09: 126560 files | 43723 flashes | 0 errors | 1.31h | saved to data/processed/glm\glm_panhandle_2024_09.parquet
+[2026-09-09 01:31:49] Listing files for 2025-05 (bucket=noaa-goes19)...
+[2026-09-09 01:32:21]   133918 files to process for 2025-05
+[2026-09-09 01:45:23]   progress 2025-05: 20000/133918 files (25.6 files/sec) | 29064 flashes so far | 0 errors
+[2026-09-09 01:58:33]   progress 2025-05: 40000/133918 files (25.5 files/sec) | 61622 flashes so far | 0 errors
+[2026-09-09 02:10:53]   progress 2025-05: 60000/133918 files (25.9 files/sec) | 86818 flashes so far | 0 errors
+[2026-09-09 02:23:37]   progress 2025-05: 80000/133918 files (26.0 files/sec) | 88581 flashes so far | 0 errors
+[2026-09-09 02:36:11]   progress 2025-05: 100000/133918 files (26.1 files/sec) | 98289 flashes so far | 0 errors
+[2026-09-09 02:49:35]   progress 2025-05: 120000/133918 files (25.9 files/sec) | 136560 flashes so far | 0 errors
+[2026-09-09 02:58:07] DONE 2025-05: 133918 files | 169474 flashes | 0 errors | 1.43h | saved to data/processed/glm\glm_panhandle_2025_05.parquet
+[2026-09-09 02:58:07] Listing files for 2025-06 (bucket=noaa-goes19)...
+[2026-09-09 02:58:39]   129576 files to process for 2025-06
+[2026-09-09 03:11:46]   progress 2025-06: 20000/129576 files (25.4 files/sec) | 2164 flashes so far | 0 errors
+[2026-09-09 03:24:32]   progress 2025-06: 40000/129576 files (25.8 files/sec) | 88117 flashes so far | 0 errors
+[2026-09-09 03:37:05]   progress 2025-06: 60000/129576 files (26.0 files/sec) | 137141 flashes so far | 0 errors
+[2026-09-09 03:49:47]   progress 2025-06: 80000/129576 files (26.1 files/sec) | 195045 flashes so far | 0 errors
+[2026-09-09 04:02:19]   progress 2025-06: 100000/129576 files (26.2 files/sec) | 310813 flashes so far | 0 errors
+[2026-09-09 04:15:23]   progress 2025-06: 120000/129576 files (26.1 files/sec) | 389926 flashes so far | 0 errors
+[2026-09-09 04:21:27] DONE 2025-06: 129576 files | 412344 flashes | 0 errors | 1.38h | saved to data/processed/glm\glm_panhandle_2025_06.parquet
+[2026-09-09 04:21:27] Listing files for 2025-07 (bucket=noaa-goes19)...
+[2026-09-09 04:21:59]   133849 files to process for 2025-07
+[2026-09-09 04:35:17]   progress 2025-07: 20000/133849 files (25.1 files/sec) | 33763 flashes so far | 0 errors
+[2026-09-09 04:48:30]   progress 2025-07: 40000/133849 files (25.1 files/sec) | 56633 flashes so far | 0 errors
+[2026-09-09 05:01:10]   progress 2025-07: 60000/133849 files (25.5 files/sec) | 106143 flashes so far | 0 errors
+[2026-09-09 05:13:52]   progress 2025-07: 80000/133849 files (25.7 files/sec) | 149293 flashes so far | 0 errors
+[2026-09-09 05:26:44]   progress 2025-07: 100000/133849 files (25.7 files/sec) | 206065 flashes so far | 0 errors
+[2026-09-09 05:40:10]   progress 2025-07: 120000/133849 files (25.6 files/sec) | 219426 flashes so far | 0 errors
+[2026-09-09 05:49:18] DONE 2025-07: 133849 files | 309474 flashes | 0 errors | 1.46h | saved to data/processed/glm\glm_panhandle_2025_07.parquet
+[2026-09-09 05:49:18] Listing files for 2025-08 (bucket=noaa-goes19)...
+[2026-09-09 05:49:53]   133918 files to process for 2025-08
+[2026-09-09 06:04:36]   progress 2025-08: 20000/133918 files (22.7 files/sec) | 47426 flashes so far | 0 errors
+[2026-09-09 06:17:26]   progress 2025-08: 40000/133918 files (24.2 files/sec) | 70897 flashes so far | 0 errors
+[2026-09-09 06:30:29]   progress 2025-08: 60000/133918 files (24.6 files/sec) | 82934 flashes so far | 0 errors
+[2026-09-09 06:43:22]   progress 2025-08: 80000/133918 files (24.9 files/sec) | 117520 flashes so far | 0 errors
+[2026-09-09 06:57:03]   progress 2025-08: 100000/133918 files (24.8 files/sec) | 184102 flashes so far | 0 errors
+[2026-09-09 07:09:57]   progress 2025-08: 120000/133918 files (25.0 files/sec) | 190616 flashes so far | 0 errors
+[2026-09-09 07:19:15] DONE 2025-08: 133918 files | 191005 flashes | 0 errors | 1.49h | saved to data/processed/glm\glm_panhandle_2025_08.parquet
+[2026-09-09 07:19:15] Listing files for 2025-09 (bucket=noaa-goes19)...
+[2026-09-09 07:19:49]   129318 files to process for 2025-09
+[2026-09-09 07:33:54]   progress 2025-09: 20000/129318 files (23.7 files/sec) | 12 flashes so far | 0 errors
+[2026-09-09 07:46:54]   progress 2025-09: 40000/129318 files (24.6 files/sec) | 1529 flashes so far | 0 errors
+[2026-09-09 08:00:18]   progress 2025-09: 60000/129318 files (24.7 files/sec) | 1585 flashes so far | 0 errors
+[2026-09-09 08:14:01]   progress 2025-09: 80000/129318 files (24.6 files/sec) | 1646 flashes so far | 0 errors
+[2026-09-09 08:28:23]   progress 2025-09: 100000/129318 files (24.3 files/sec) | 7573 flashes so far | 0 errors
+[2026-09-09 08:41:42]   progress 2025-09: 120000/129318 files (24.4 files/sec) | 19637 flashes so far | 0 errors
+[2026-09-09 08:48:12] DONE 2025-09: 129318 files | 19639 flashes | 0 errors | 1.47h | saved to data/processed/glm\glm_panhandle_2025_09.parquet
+[2026-09-09 08:48:13] 
+=== ALL MONTHS DONE ===
+[2026-09-09 08:48:13] Total files processed this run: 1317648
+[2026-09-09 08:48:13] Total flashes (all months, including skipped): 1958298
+[2026-09-09 08:48:13] Total errors: 0
+[2026-09-09 08:48:13] Total runtime this run: 13.93 hours
+[2026-09-09 08:48:13] Total parquet size: 37.8 MB across 10 monthly files
+[2026-09-09 08:48:13] Sample CSV (first 1000 rows of glm_panhandle_2024_05.parquet) written to data/processed/glm\glm_panhandle_sample_1000.csv
+[2026-09-09 08:48:13] === DONE ===

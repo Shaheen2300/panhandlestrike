@@ -1,0 +1,7 @@
+model,pooled_AUC,fold_AUC_mean,fold_AUC_std,prec@0.5,rec@0.5
+LogReg,0.752,0.748,0.013,0.584,0.356
+LogReg+interactions,0.75,0.745,0.014,0.578,0.348
+RandomForest,0.749,0.75,0.022,0.616,0.232
+HistGB,0.743,0.743,0.016,0.564,0.389
+NaiveBayes,0.731,0.731,0.012,0.454,0.631
+DecisionTree,0.724,0.722,0.012,0.51,0.443

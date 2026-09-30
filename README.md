@@ -1,102 +1,194 @@
 # PanhandleStrike
 
-GIS-based site suitability model for identifying priority locations for lightning shelter infrastructure across the Florida Panhandle (Escambia, Santa Rosa, Okaloosa, Walton, and Bay counties).
+**Where should the Florida Panhandle put its next lightning shelters?**
 
-## Project overview
+PanhandleStrike is a GIS and machine-learning site-suitability study for
+lightning-shelter siting across five Florida Panhandle counties: Escambia,
+Santa Rosa, Okaloosa, Walton, and Bay. It combines four storm seasons of
+satellite lightning data, 2020 Census population, the state's emergency-shelter
+inventory, and road-network drive times. The output is a shortlist of Census
+block groups that need a shelter most.
 
-The model combines multi-year historical lightning strike density, population/visitor exposure, and existing shelter/facility gaps using a weighted overlay methodology, adapted from established GIS suitability modeling approaches previously applied to hurricane and earthquake shelter siting. Model outputs are validated against NOAA's historical lightning fatality and injury records.
+**[Open the interactive dashboard](https://shaheen2300.github.io/panhandlestrike/dashboard/panhandle_priority_dashboard.html)**
+(Folium map; about 4.6 MB, so it takes a moment to load)
 
-A secondary component includes network analysis (closest facility / service area analysis) to estimate travel time from any point in the study area to the nearest existing shelter, plus a live lightning monitoring + real-time routing feature.
+Team: Shaheen Memon, Koushal Doddipatla (MS Data Science capstone, University of West Florida)
 
-## Team
+---
 
-- Shaheen
-- Koushal Doddipatla
+## Headline results (4-year primary window, May–Sep 2022–2025)
 
-## Folder structure
+| | |
+|---|---|
+| Lightning flashes analyzed | **4,304,268** GOES-16/19 GLM flashes (936,720 over land in the study area) |
+| Population covered | **972,094** residents, 589 inhabited block groups |
+| Existing shelters | **194** (137 general, 46 pet-friendly, 11 special-needs) |
+| Shelter coverage | **86.8%** of residents are within a 15-minute drive of a shelter. The remaining **128,659 people** (83 block groups) are mostly in rural northern Okaloosa and Walton, up to 28 min away |
+| Final shortlist | **37 block groups, 74,091 people**: Okaloosa 16, Walton 8, Santa Rosa 8, Bay 4, Escambia 1 |
+| Anomaly classifier (2026 out-of-time test) | Logistic regression AUC **0.781**, random forest AUC **0.788**, trained on 2022–25 and tested on unseen 2026 data |
+
+A block group makes the **shortlist** only if it meets all three criteria:
+
+1. **Top-quartile suitability**: a weighted overlay of population, flash
+   density, and network drive time to the nearest shelter (0.34 / 0.33 / 0.33),
+   percentile-ranked.
+2. **Coverage gap**: more than 15 minutes' drive from any existing shelter.
+3. **Confirmed lightning anomaly**: at least one day flagged by **both**
+   anomaly methods (see below).
+
+### Featured findings
+
+- **Walton `121319503053`, the strongest single case.** It has the longest
+  drive to shelter in the study area (28.2 min) and 53,947 flashes over four
+  seasons. It had 28 days flagged by both methods and a peak burst of 1,207
+  flashes in 30 minutes. Its suitability rank (102 of 589) is held down only by
+  its small population (1,135).
+- **Northern Okaloosa cluster: relative anomaly is not absolute hazard.** Six
+  contiguous block groups (~11,900 residents) are all 21–25 min from shelter.
+  All six show z-score anomalies, because their baseline is near zero. Only
+  three also show real 30-minute bursts, so the cluster splits 3-and-3 on the
+  shortlist. Requiring both methods to agree keeps statistical noise off the
+  list.
+- **Validation against real storms.** The June 2025 flash spike (412k flashes)
+  lines up day for day with NOAA Storm Events reports: flash flooding on June
+  9–10, an EF0 tornado on June 17, and severe wind and hail on June 23 and 25.
+  All five days trip both detectors under the 4-year baseline.
+
+## Method
 
 ```
-panhandlestrike/
-├── data/         # raw and processed data (see .gitignore for exclusions)
-├── notebooks/    # Jupyter notebooks for exploration and analysis
-├── src/          # reusable Python scripts (data pulling, feature engineering, modeling)
-├── README.md
-└── requirements.txt
+GOES GLM (AWS S3) ─┐
+Census 2020 ───────┼─► spatial join (flash → block group) ─► anomaly detection ─┐
+FDEM shelters ─────┤                                                            ├─► combined priority ─► shortlist + dashboard
+OSM road network ──┴─► multi-source Dijkstra drive time ─► suitability overlay ─┘
+                                                     └──► ML anomaly classifier (block group × month)
 ```
+
+- **Anomaly detection** (`src/anomaly_detection_4yr.py`) uses two methods.
+  (1) A daily z-score against each block group's own history (z ≥ 3).
+  (2) An absolute rolling 30-minute burst threshold (≥ 5 flashes). A day counts
+  as confirmed only when both agree.
+- **Routing** (`src/routing_analysis.py`) computes drive time from every block
+  group to its nearest shelter over the OSM drivable network. Edge speeds come
+  from `maxspeed` tags, and a multi-source Dijkstra runs from all shelter nodes
+  at once.
+- **Water polygons excluded.** Six zero-population Census "water" block groups
+  (tract `99xxxx`) are removed up front, because no shelter can be built on
+  open water.
+- **Coastal 10 km buffer variant** (`src/coastal_buffer_analysis_4yr.py`)
+  credits offshore flashes within 10 km to the nearest coastal block group.
+  This raises flashes in coastal block groups by 218% and changes the
+  shortlist from 37 to 47. Both versions are kept, because the buffer distance
+  is an open methodological choice.
+
+### Machine-learning layer
+
+This layer predicts whether a block group will have a confirmed anomaly in a
+given month. The data is 11,780 block-group-months, 29.8% positive, validated
+with nested leave-one-county-out spatial cross-validation.
+
+- **Six models compared** (LogReg, LogReg with interactions, random forest,
+  HistGradientBoosting, decision tree, Naive Bayes). The top four fall within
+  fold-to-fold noise of each other, so plain logistic regression is the
+  practical pick.
+- **Features that helped:** calendar/seasonality, NLCD land cover (more
+  developed land means *fewer* anomalies), and the ENSO index (ONI).
+  Month-to-month persistence features did not help.
+- **Out-of-time test on 2026 found and fixed a real problem.** The 2-year model
+  (2024–25) saturated on 2026's strong El Niño, predicting "anomaly" for 100% of
+  rows. Its 0.812 AUC was therefore misleading. Retraining on four seasons that
+  span La Niña to El Niño fixed it. The retrained model flags 40% of 2026 rows
+  against a true rate of 35% (precision 0.592, recall 0.671). The gap between
+  cross-validation and 2026 performance shrank from −0.040 to −0.006.
+
+Figures 16, 18 and 19 in [`report_figures/`](report_figures/index.md) document
+that before/after comparison. All other figures use the 4-year window.
 
 ## Data sources
 
-| Dataset | Source | Purpose |
+| Dataset | Source | Used for |
 |---|---|---|
-| Lightning flashes | GOES-16/19 GLM (NOAA satellite, AWS Open Data) | Hazard feature: flash density |
-| Lightning fatalities/injuries | NOAA Storm Events Database | Validation / target variable |
-| Population | US Census 2020 Decennial (block group) | Exposure feature |
-| Recreational points | OpenStreetMap | Exposure feature |
-| Existing shelters | FL Division of Emergency Management (Risk Shelter Inventory) | Gap analysis |
-| Road/path network | OpenStreetMap | Routing analysis |
-| Land cover | USGS/MRLC NLCD | Contextual feature |
+| Lightning flashes | GOES-16 (2022–24) / GOES-19 (2025–26) Geostationary Lightning Mapper, NOAA on AWS Open Data | Hazard, anomalies |
+| Population | US Census 2020 Decennial, block group | Exposure |
+| Shelters | FL Division of Emergency Management, Risk Shelter Inventory (ArcGIS REST) | Coverage gap |
+| Road network | OpenStreetMap via `osmnx` (61,253 nodes / 152,235 edges) | Drive-time routing |
+| Land cover | USGS/MRLC NLCD 2021 | ML features |
+| ENSO index | NOAA CPC Oceanic Niño Index | ML features |
+| Severe-weather reports | NOAA Storm Events Database, 2016–2025 | Validation |
 
-Notes on source changes from the original plan:
-- **Lightning:** the XWeather historical archive (`/lightning/archive`) requires a paid subscription tier not available on the free key (confirmed: `404`/`insufficient_scope`). Pivoted to GOES GLM satellite data pulled directly from NOAA's public AWS bucket. GOES-16 covers 2024; GOES-19 covers 2025 (GOES-16 was retired as operational GOES-East in spring 2025).
-- **Shelters:** FGDL has no emergency-shelter layer (checked its full 452-dataset catalog). FDEM's statewide Risk Shelter Inventory (ArcGIS REST) covers all 5 counties from one authoritative source.
+**Changes from the original plan:**
+- **Lightning.** The XWeather historical archive needed a paid tier, so the
+  project pulls GLM data directly from NOAA's public S3 buckets instead:
+  about 2.6M NetCDF files for 2022–25 (11 failed downloads in total), plus
+  523k files for 2026.
+- **Shelters.** FGDL has no shelter layer. FDEM's statewide inventory covers all
+  five counties from one authoritative source.
 
-## Setup
+## Repository layout
+
+```
+panhandlestrike/
+├── dashboard/        interactive Folium map (4-year) + archived 2-year version
+├── data/processed/   analysis outputs (GLM Parquet, features, anomalies, suitability, final tables)
+├── notes/            running-notes.md (full methodology log + audit trail), featured-findings write-up
+├── notebooks/        exploration script
+├── report_figures/   19 report figures + index.md
+├── src/              every pull / feature / model / figure script
+└── requirements.txt
+```
+
+Key outputs:
+- `data/processed/final_4yr/blockgroup_combined_priority_4yr.{csv,geojson}`
+  has one row per block group, with suitability, anomaly counts, drive time,
+  and shortlist flag.
+- `data/processed/features/model_comparison_4yr_results.csv` holds the
+  six-model comparison.
+
+`data/raw/`, `data/processed/osm/` and `data/processed/census/` are git-ignored,
+because they can be re-downloaded from public sources.
+
+## Reproducing
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Some pulls need credentials in a `.env` file (git-ignored): `CENSUS_API_KEY` for the
-Census population pull. GLM, shelter, OSM, and Storm Events pulls need no credentials.
+The Census pull needs a free `CENSUS_API_KEY` in a git-ignored `.env` file.
+Every other source is public and needs no credentials.
 
-## Status
+Rough pipeline order (each script's docstring gives its inputs and outputs):
 
-**Data collection: complete.** All layers pulled and filtered to the 5-county study
-area (Escambia, Santa Rosa, Okaloosa, Walton, Bay). Outputs in `data/processed/`.
+1. **Pulls:** `pull_glm_data.py`, `pull_glm_2022_2023.py`, `pull_glm_2026.py`,
+   `pull_census_population.py`, `pull_census_geometry.py`, `pull_shelters.py`,
+   `pull_osm_roads.py`, `pull_storm_events.py`
+2. **Features:** `features_spatial_join.py`, `build_4yr_features.py`,
+   `features_extra.py`, `features_nlcd.py`
+3. **Analysis:** `routing_analysis.py`, `anomaly_detection_4yr.py`,
+   `suitability_model_4yr.py`, `combined_priority_4yr.py`,
+   `coastal_buffer_analysis_4yr.py`
+4. **Models:** `model_comparison_4yr.py`, `retrain_4yr_model.py`,
+   `validate_2026.py`
+5. **Outputs:** `build_dashboard_4yr.py`, `generate_report_figures.py`
 
-| Dataset | Records | Coverage | Format |
-|---|---|---|---|
-| GLM lightning flashes | 1,958,298 flashes | May–Sep 2024 + May–Sep 2025, panhandle bbox (29.5–31.5°N, -88.0 to -84.5°E) | 10 monthly Parquet files (38 MB) |
-| Census population | 595 block groups, 972,094 people (2020) | 5 counties | GeoJSON w/ geometry + `pop_density_per_sqkm` |
-| Shelters | 194 facilities (137 general, 46 pet-friendly, 11 special-needs) | 5 counties | GeoJSON (per-type + combined) |
-| Road network | 61,253 nodes / 152,235 edges | 5 counties, drivable network | GraphML (routable) + GeoJSON |
-| Storm Events (validation) | 1,034 severe-weather rows; 59 lightning-specific | 5 counties, 2016–2025 | CSV |
+Scripts without the `_4yr` suffix are the original 2-year (2024–25) versions.
+They are kept for the comparison section and the audit trail.
 
-GLM pull ran in 13.9 h (16-process pool, 1.32M files, 0 errors). See
-`data/processed/glm/glm_pull_log.txt` for the full run log and `src/calibrate_*.py`
-for the concurrency benchmarking that set the approach.
+The full GLM pull is long: the 2024–25 pull alone took 13.9 h on a 16-process
+pool. See `src/calibrate_*.py` for the concurrency benchmarking behind that
+design.
 
-**In progress: feature engineering.** Two parallel deliverables, both built on
-one flash→block-group spatial join (`src/features_spatial_join.py`; 501,502 of
-1.96M flashes fall on the 5-county land area, rest over the Gulf).
+## Limitations
 
-Both deliverables first exclude the 6 zero-population Census "water" block groups
-(tract codes `99xxxx`) covering the Gulf and coastal bays — a shelter can't be
-sited on open water and they protect no population. After exclusion: 589 land
-block groups, 407,486 flashes.
+- Suitability weights are equal by design, not calibrated against outcomes.
+  NOAA records only 59 lightning-specific events in these counties over ten
+  years, which is too few to fit weights to.
+- The shortlist edge depends on the baseline. Moving from 2 to 4 seasons moved
+  11 block groups across the line (42 → 37). Treat individual borderline block
+  groups as sensitive to that choice.
+- The ML ceiling is about 0.8 AUC. Exactly when a small block group gets a
+  convective burst is partly unpredictable from geography and calendar alone.
+- 2026 ONI (up to +1.80) still exceeds the training maximum (+1.50), so some
+  extrapolation risk remains.
 
-- **Anomaly / high-intensity alerting** (`src/anomaly_detection.py`) — dual method:
-  (1) historical daily z-score vs each block group's own baseline (z≥3), and
-  (2) absolute rolling-30-min burst threshold (≥5 flashes/window). The June 2025
-  validation days (9, 10, 17, 23, 25) trip both methods across dozens of block
-  groups each; flag-set overlap is 40% on those days vs 27% baseline.
-- **Road-network routing** (`src/routing_analysis.py`) — drive time from each
-  block group to the nearest existing shelter along the OSM network (edge speeds
-  imputed from `maxspeed` tags; multi-source Dijkstra from all shelter nodes).
-  86.8% of the 972k population is within a 15-minute drive of a shelter;
-  the 13.2% gap (128,659 people, 83 block groups) is concentrated in rural
-  northern Okaloosa and Walton counties, up to 28 minutes out.
-- **Shelter siting suitability** (`src/suitability_model.py`) — weighted overlay
-  of population + flash density + **network drive time to nearest shelter**
-  (from the routing step, not straight-line distance), percentile-ranked,
-  one score per block group.
-- **Combined priority + shortlist** (`src/combined_priority.py`) — one table per
-  block group joining all three, plus a final shortlist of block groups that are
-  simultaneously top-quartile suitability, in the >15-min coverage gap, and have
-  ≥1 day flagged by **both** anomaly methods. 42 block groups (81,702 people):
-  Okaloosa 18, Walton 9, Bay 8, Santa Rosa 6, Escambia 1.
-
-**Outputs:** `data/processed/final/blockgroup_combined_priority.{csv,geojson}`.
-
-**Next:** live lightning monitoring + real-time routing feature; write-up /
-validation against NOAA lightning fatality records.
+Full methodology, every number's derivation, and the audit trail are in
+[`notes/running-notes.md`](notes/running-notes.md).
